@@ -8,9 +8,12 @@ def call(Map config = [:]) {
         sh 'echo "Ejecución de las pruebas de calidad de código"'
     }
 
+    // Lógica de aborto
     if (abortPipeline) {
-        error("Pipeline abortado por configuración")
-    } else if (branchName == 'master' || branchName.startsWith('hotfix')) {
+        error("Pipeline abortado por configuración (abortPipeline=true)")
+    }
+
+    if (branchName == 'master' || branchName.startsWith('hotfix')) {
         error("Pipeline abortado por política de rama (${branchName})")
     }
 
