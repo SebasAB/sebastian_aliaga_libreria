@@ -1,14 +1,14 @@
 def call(Map config = [:]) {
     def abortPipeline = config.get('abortPipeline', false)
-    def branchName = env.GIT_BRANCH ?: 'unknown'
+    def fullBranch = env.GIT_BRANCH ?: 'unknown'
+    def branchName = fullBranch.replaceFirst(/^origin\\//, '')
 
-    echo "Rama actual: ${branchName}"
+    echo "Rama detectada: ${branchName}"
 
     timeout(time: 5, unit: 'MINUTES') {
         sh 'echo "Ejecución de las pruebas de calidad de código"'
     }
 
-    // Lógica de aborto
     if (abortPipeline) {
         error("Pipeline abortado por configuración (abortPipeline=true)")
     }
@@ -19,4 +19,3 @@ def call(Map config = [:]) {
 
     echo "Análisis estático completado correctamente."
 }
-
